@@ -1,9 +1,20 @@
+import Abstractions.IAppDataRepository;
+import Abstractions.IAppPhaseHandler;
+import Abstractions.IInputReader;
+import Abstractions.IRoleRepository;
+import Core.AppPhase;
+import Repositories.InMemoryAppDataProvider;
+import Repositories.InMemoryRoleRepository;
+
 public class Main {
     private static AppPhase GetNextPhase(AppPhase phase)
     {
         AppPhase nextPhase = null;
         switch (phase)
         {
+            case ROLE_INPUT:
+                nextPhase = AppPhase.STUDENT_INPUT;
+                break;
             case STUDENT_INPUT:
                 nextPhase =  AppPhase.PROJECT_INPUT;
                 break;
@@ -15,9 +26,12 @@ public class Main {
     }
 
     public static void main(String[] args) {
-	    IAppDataProvider appDataProvider = new DummyAppDataProvider();
+	    IAppDataRepository appDataProvider = new InMemoryAppDataProvider();
         AppPhase appPhase = appDataProvider.GetApplicationPhase();
-        AppPhaseHandlerFactory factory = new AppPhaseHandlerFactory();
+
+        IInputReader inputReader = new ConsoleInputReader();
+        IRoleRepository roleRepository = new InMemoryRoleRepository();
+        AppPhaseHandlerFactory factory = new AppPhaseHandlerFactory(inputReader, roleRepository);
 
         IAppPhaseHandler appPhaseHandler = factory.GetAppPhaseHandler(appPhase);
 

@@ -1,7 +1,12 @@
+package Repositories;
+
+import Abstractions.IAppDataRepository;
+import Core.AppPhase;
+
 /**
  * Created by Grigoryan on 10.11.2016.
  */
-public class DummyAppDataProvider implements IAppDataProvider {
+public class InMemoryAppDataProvider implements IAppDataRepository {
 
     private AppPhase _appPhase;
 
@@ -13,9 +18,9 @@ public class DummyAppDataProvider implements IAppDataProvider {
         _appPhase = newPhase;
     }
 
-    public DummyAppDataProvider()
+    public InMemoryAppDataProvider()
     {
-        _appPhase = AppPhase.STUDENT_INPUT;
+        _appPhase = AppPhase.ROLE_INPUT;
     }
 
 }

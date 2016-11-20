@@ -1,3 +1,7 @@
+package AppPhaseHandlers;
+
+import Abstractions.IAppPhaseHandler;
+
 /**
  * Created by Grigoryan on 11.11.2016.
  */
