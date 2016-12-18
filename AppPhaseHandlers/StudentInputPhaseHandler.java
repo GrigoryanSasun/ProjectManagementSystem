@@ -2,6 +2,7 @@ package AppPhaseHandlers;
 
 import Abstractions.IAppPhaseHandler;
 import Abstractions.IInputReader;
+import Abstractions.IRoleRepository;
 import Abstractions.IStudentRepository;
 import Core.Student;
 import Exceptions.StudentAlreadyExistsException;
@@ -16,6 +17,7 @@ public class StudentInputPhaseHandler implements IAppPhaseHandler {
     private IInputReader _inputReader;
 
     private IStudentRepository _studentRepository;
+    private IRoleRepository _roleRepository;
 
     private void PrintStudents(Student[] students) {
         System.out.println("ID\tFirstname\tLastname");
@@ -115,7 +117,13 @@ public class StudentInputPhaseHandler implements IAppPhaseHandler {
 
     private boolean IsThePhaseComplete()
     {
-        return _studentRepository.GetStudentCount() > 0;
+        int studentCount = _studentRepository.GetStudentCount();
+        int requiredRoleCount = _roleRepository.GetRequiredRoles().length;
+        if (studentCount < requiredRoleCount) {
+            System.out.println("There should be at least as many students as required roles (" + requiredRoleCount + ")");
+            return false;
+        }
+        return true;
     }
 
     public boolean Handle() {
@@ -161,7 +169,6 @@ public class StudentInputPhaseHandler implements IAppPhaseHandler {
                     else
                     {
                         System.out.println("The phase cannot be complete.");
-                        System.out.println("There should be at least one student.");
                     }
                     break;
                 case 7:
@@ -175,9 +182,12 @@ public class StudentInputPhaseHandler implements IAppPhaseHandler {
         return wasHandled;
     }
 
-    public StudentInputPhaseHandler(IInputReader inputReader, IStudentRepository studentRepository)
+    public StudentInputPhaseHandler(IInputReader inputReader,
+                                    IStudentRepository studentRepository,
+                                    IRoleRepository roleRepository)
     {
         _inputReader = inputReader;
         _studentRepository = studentRepository;
+        _roleRepository = roleRepository;
     }
 }

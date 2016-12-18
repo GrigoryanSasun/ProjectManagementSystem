@@ -9,6 +9,8 @@ import Exceptions.RoleAlreadyExistsException;
 import Exceptions.RoleDoesNotExistException;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 
 public class InMemoryRoleRepository implements IRoleRepository {
     private HashMap<Integer, Role> _roleIdRoleMapping;
@@ -20,6 +22,19 @@ public class InMemoryRoleRepository implements IRoleRepository {
 
     public Role[] GetAllRoles() {
         return _roleIdRoleMapping.values().toArray(new Role[0]);
+    }
+
+    public Role[] GetRequiredRoles() {
+        List<Role> requiredRoles = new Vector<Role>();
+        Role[] allRoles = GetAllRoles();
+        for (int i=0;i<allRoles.length;i++)
+        {
+            Role role = allRoles[i];
+            if (role.IsRequired()) {
+                requiredRoles.add(role);
+            }
+        }
+        return requiredRoles.toArray(new Role[0]);
     }
 
     public Role GetRoleById(int roleId) {

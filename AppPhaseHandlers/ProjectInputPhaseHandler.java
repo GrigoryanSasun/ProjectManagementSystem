@@ -3,9 +3,7 @@
  */
 package AppPhaseHandlers;
 
-import Abstractions.IAppPhaseHandler;
-import Abstractions.IInputReader;
-import Abstractions.IProjectRepository;
+import Abstractions.*;
 import Core.Project;
 import Exceptions.ProjectAlreadyExistsException;
 import Exceptions.ProjectDoesNotExistException;
@@ -16,6 +14,7 @@ public class ProjectInputPhaseHandler implements IAppPhaseHandler {
     private IInputReader _inputReader;
 
     private IProjectRepository _projectRepository;
+    private IStudentRepository _studentRepository;
 
     private void PrintProjects(Project[] projects) {
         System.out.println("ID\tName");
@@ -120,7 +119,13 @@ public class ProjectInputPhaseHandler implements IAppPhaseHandler {
 
     private boolean IsThePhaseComplete()
     {
-        return _projectRepository.GetProjectCount() > 0;
+        int projectCount = _projectRepository.GetProjectCount();
+        int studentCount = _studentRepository.GetStudentCount();
+        if (projectCount != studentCount) {
+            System.out.println("There should be as many projects as students (" + studentCount + ")");
+            return false;
+        }
+        return true;
     }
 
     public boolean Handle() {
@@ -166,7 +171,6 @@ public class ProjectInputPhaseHandler implements IAppPhaseHandler {
                     else
                     {
                         System.out.println("The phase cannot be complete.");
-                        System.out.println("There should be at least one project.");
                     }
                     break;
                 case 7:
@@ -180,9 +184,10 @@ public class ProjectInputPhaseHandler implements IAppPhaseHandler {
         return wasHandled;
     }
 
-    public ProjectInputPhaseHandler(IInputReader inputReader, IProjectRepository projectRepository)
+    public ProjectInputPhaseHandler(IInputReader inputReader, IProjectRepository projectRepository, IStudentRepository studentRepository)
     {
         _inputReader = inputReader;
         _projectRepository = projectRepository;
+        _studentRepository = studentRepository;
     }
 }

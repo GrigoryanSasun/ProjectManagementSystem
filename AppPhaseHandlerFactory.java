@@ -1,8 +1,5 @@
 import Abstractions.*;
-import AppPhaseHandlers.ProjectInputPhaseHandler;
-import AppPhaseHandlers.ProjectManagementPhaseHandler;
-import AppPhaseHandlers.RoleInputPhaseHandler;
-import AppPhaseHandlers.StudentInputPhaseHandler;
+import AppPhaseHandlers.*;
 import Core.AppPhase;
 
 /**
@@ -27,13 +24,16 @@ public class AppPhaseHandlerFactory {
                 appPhaseHandler = new RoleInputPhaseHandler(_inputReader, _roleRepository);
                 break;
             case STUDENT_INPUT:
-                appPhaseHandler = new StudentInputPhaseHandler(_inputReader, _studentRepository);
+                appPhaseHandler = new StudentInputPhaseHandler(_inputReader, _studentRepository,_roleRepository);
                 break;
             case PROJECT_INPUT:
-                appPhaseHandler = new ProjectInputPhaseHandler(_inputReader, _projectRepository);
+                appPhaseHandler = new ProjectInputPhaseHandler(_inputReader, _projectRepository,_studentRepository);
+                break;
+            case STUDENT_PROJECT_MAP:
+                appPhaseHandler = new StudentProjectMapPhaseHandler(_inputReader,_roleRepository,_studentRepository,_projectRepository);
                 break;
             case PROJECT_MANAGEMENT:
-                appPhaseHandler = new ProjectManagementPhaseHandler();
+                appPhaseHandler = new ProjectManagementPhaseHandler(_inputReader,_roleRepository,_studentRepository,_projectRepository);
                 break;
         }
         return appPhaseHandler;

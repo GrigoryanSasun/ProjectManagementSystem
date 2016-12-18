@@ -6,5 +6,6 @@ public enum AppPhase {
     ROLE_INPUT,
     STUDENT_INPUT,
     PROJECT_INPUT,
+    STUDENT_PROJECT_MAP,
     PROJECT_MANAGEMENT
 }

@@ -18,7 +18,10 @@ public class Main {
                 nextPhase =  AppPhase.PROJECT_INPUT;
                 break;
             case PROJECT_INPUT:
-                nextPhase =  AppPhase.PROJECT_MANAGEMENT;
+                nextPhase = AppPhase.STUDENT_PROJECT_MAP;
+                break;
+            case STUDENT_PROJECT_MAP:
+                nextPhase = AppPhase.PROJECT_MANAGEMENT;
                 break;
         }
         return nextPhase;
