@@ -1,6 +1,8 @@
-package AppPhaseHandlers; /**
+/**
  * Created by Grigoryan on 20.11.2016.
  */
+
+package AppPhaseHandlers;
 import Abstractions.IAppPhaseHandler;
 import Abstractions.IInputReader;
 import Abstractions.IRoleRepository;
@@ -70,8 +72,34 @@ public class RoleInputPhaseHandler implements IAppPhaseHandler {
 
     private void EditRoleById()
     {
-
-        System.out.println("Edit role");
+        System.out.println("Specify the role id: ");
+        int roleId = _inputReader.GetInteger();
+        Role foundRole = _roleRepository.GetRoleById(roleId);
+        if (foundRole == null) {
+            System.out.println("No role found with specified id");
+        }
+        else {
+            Role editedRole = new Role();
+            editedRole.SetId(foundRole.GetId());
+            System.out.println("Specify the new role name");
+            String newRoleName = _inputReader.GetString();
+            editedRole.SetName(newRoleName);
+            System.out.println("Specify whether the role is required (y/n)");
+            boolean isRequired = _inputReader.GetBoolean();
+            editedRole.SetIsRequired(isRequired);
+            try {
+                _roleRepository.UpdateRole(editedRole);
+                System.out.println("The role successfully updated");
+            }
+            catch(RoleDoesNotExistException noRoleException)
+            {
+                System.out.println("The role does not exist");
+            }
+            catch(RoleAlreadyExistsException roleExistsException)
+            {
+                System.out.println("A role with specified name already exists");
+            }
+        }
     }
 
     private void RemoveRoleById()
@@ -89,7 +117,14 @@ public class RoleInputPhaseHandler implements IAppPhaseHandler {
 
     private boolean IsThePhaseComplete()
     {
-        return true;
+        Role[] roles = _roleRepository.GetAllRoles();
+        for (int i=0;i<roles.length;i++)
+        {
+            if (roles[i].IsRequired()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean Handle() {
@@ -135,10 +170,11 @@ public class RoleInputPhaseHandler implements IAppPhaseHandler {
                     else
                     {
                         System.out.println("The phase cannot be complete.");
+                        System.out.println("There should be at least one required role.");
                     }
                     break;
                 case 7:
-                    System.out.println("Exiting");
+                    System.out.println("Exiting from role input phase.");
                     shouldContinue = false;
                     break;
                 default:

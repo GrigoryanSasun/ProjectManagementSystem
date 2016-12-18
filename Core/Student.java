@@ -12,6 +12,10 @@ public class Student {
         return  _id;
     }
 
+    public void SetId(String newId) {
+        _id = newId;
+    }
+
     public String GetFirstName()
     {
         return _firstName;
@@ -31,10 +35,4 @@ public class Student {
     {
         _lastName = newLastName;
     }
-
-    public Student(String studentId)
-    {
-        _id = studentId;
-    }
-
 }

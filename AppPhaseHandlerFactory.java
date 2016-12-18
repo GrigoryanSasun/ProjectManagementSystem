@@ -1,6 +1,4 @@
-import Abstractions.IAppPhaseHandler;
-import Abstractions.IInputReader;
-import Abstractions.IRoleRepository;
+import Abstractions.*;
 import AppPhaseHandlers.ProjectInputPhaseHandler;
 import AppPhaseHandlers.ProjectManagementPhaseHandler;
 import AppPhaseHandlers.RoleInputPhaseHandler;
@@ -12,6 +10,9 @@ import Core.AppPhase;
  */
 public class AppPhaseHandlerFactory {
     private IRoleRepository _roleRepository;
+    private IStudentRepository _studentRepository;
+    private IProjectRepository _projectRepository;
+
     private IInputReader _inputReader;
 
     public IAppPhaseHandler GetAppPhaseHandler(AppPhase appPhase)
@@ -26,10 +27,10 @@ public class AppPhaseHandlerFactory {
                 appPhaseHandler = new RoleInputPhaseHandler(_inputReader, _roleRepository);
                 break;
             case STUDENT_INPUT:
-                appPhaseHandler = new StudentInputPhaseHandler();
+                appPhaseHandler = new StudentInputPhaseHandler(_inputReader, _studentRepository);
                 break;
             case PROJECT_INPUT:
-                appPhaseHandler = new ProjectInputPhaseHandler();
+                appPhaseHandler = new ProjectInputPhaseHandler(_inputReader, _projectRepository);
                 break;
             case PROJECT_MANAGEMENT:
                 appPhaseHandler = new ProjectManagementPhaseHandler();
@@ -38,9 +39,14 @@ public class AppPhaseHandlerFactory {
         return appPhaseHandler;
     }
 
-    AppPhaseHandlerFactory(IInputReader reader, IRoleRepository roleRepository)
+    AppPhaseHandlerFactory(IInputReader reader,
+                           IRoleRepository roleRepository,
+                           IStudentRepository studentRepository,
+                           IProjectRepository projectRepository)
     {
         _inputReader = reader;
         _roleRepository = roleRepository;
+        _studentRepository = studentRepository;
+        _projectRepository = projectRepository;
     }
 }

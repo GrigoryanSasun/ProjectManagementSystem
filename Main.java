@@ -1,10 +1,9 @@
-import Abstractions.IAppDataRepository;
-import Abstractions.IAppPhaseHandler;
-import Abstractions.IInputReader;
-import Abstractions.IRoleRepository;
+import Abstractions.*;
 import Core.AppPhase;
 import Repositories.InMemoryAppDataProvider;
+import Repositories.InMemoryProjectRepository;
 import Repositories.InMemoryRoleRepository;
+import Repositories.InMemoryStudentRepository;
 
 public class Main {
     private static AppPhase GetNextPhase(AppPhase phase)
@@ -31,7 +30,9 @@ public class Main {
 
         IInputReader inputReader = new ConsoleInputReader();
         IRoleRepository roleRepository = new InMemoryRoleRepository();
-        AppPhaseHandlerFactory factory = new AppPhaseHandlerFactory(inputReader, roleRepository);
+        IStudentRepository studentRepository = new InMemoryStudentRepository();
+        IProjectRepository projectRepository = new InMemoryProjectRepository();
+        AppPhaseHandlerFactory factory = new AppPhaseHandlerFactory(inputReader, roleRepository, studentRepository, projectRepository);
 
         IAppPhaseHandler appPhaseHandler = factory.GetAppPhaseHandler(appPhase);
 

@@ -13,7 +13,7 @@ public interface IRoleRepository {
     Role[] GetAllRoles();
     Role GetRoleById(int roleId);
     void InsertRole(Role newRole) throws RoleAlreadyExistsException;
-    void UpdateRole(Role updatedRole) throws RoleDoesNotExistException;
+    void UpdateRole(Role updatedRole) throws RoleDoesNotExistException,RoleAlreadyExistsException;
     void RemoveRole(int roleId) throws RoleDoesNotExistException;
     void SaveChanges();
 }

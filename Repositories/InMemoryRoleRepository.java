@@ -40,10 +40,21 @@ public class InMemoryRoleRepository implements IRoleRepository {
         }
     }
 
-    public void UpdateRole(Role updatedRole) throws RoleDoesNotExistException {
+    public void UpdateRole(Role updatedRole) throws RoleDoesNotExistException,RoleAlreadyExistsException {
         int updatedRoleId = updatedRole.GetId();
-        if (_roleIdRoleMapping.containsKey(updatedRoleId)) {
-            _roleIdRoleMapping.put(updatedRoleId, updatedRole);
+        Role foundRole = _roleIdRoleMapping.get(updatedRoleId);
+        if (foundRole != null) {
+            String updatedName = updatedRole.GetName();
+            if (updatedName.equals(foundRole.GetName())) {
+                _roleIdRoleMapping.put(updatedRoleId, updatedRole);
+            }
+            else if (!_roleNameSet.containsKey(updatedName)) {
+                _roleNameSet.put(updatedName, true);
+                _roleIdRoleMapping.put(updatedRoleId, updatedRole);
+            }
+            else {
+                throw new RoleAlreadyExistsException();
+            }
         }
         else {
             throw new RoleDoesNotExistException();
@@ -51,8 +62,10 @@ public class InMemoryRoleRepository implements IRoleRepository {
     }
 
     public void RemoveRole(int roleId) throws RoleDoesNotExistException {
-        if (_roleIdRoleMapping.containsKey(roleId)) {
+        Role foundRole = _roleIdRoleMapping.get(roleId);
+        if (foundRole != null) {
             _roleIdRoleMapping.remove(roleId);
+            _roleNameSet.remove(foundRole.GetName());
         }
         else {
             throw new RoleDoesNotExistException();
